@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.status{
+    font-size: small;
+    background-color: darkgray;
+    /* padding: 0.25rem; */
+    /* margin: 4px 0; */
+    padding:  6px 4px;
+    border-radius: 5px;
+    width: auto;
+    font-weight: bold;
+}
+.PLANED{
+    background-color:  darkgray;
+}
+.ONGOING{
+  background-color: rgb(11, 87, 44);
+  color: #ffff;
+}
+.DONE{
+background-color: rgb(243, 7, 7);
+color: #ffff;
+}
+
+
+/* quill ql-container ql-bubble ql-editor ql-blank  */
+.ql-container{
+  font-size: 28px !important;
+
+}
+.quill >.ql-container >.ql-editor.ql-blank::before{
+  color: #b3b3b1 !important;
+}
+.dark{
+  background-color: #121212;
+}
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+.mainBox{
+  margin-top: 70px;
+}
+.ProseMirror {
+  padding: 10px;
+  background: transparent;
+  border-radius: 0 0 5px 5px;
+  min-height: 100px;
+}
+
+.ProseMirror > * + * {
+  margin-top: 0.75em;
+}
+
+.ProseMirror ul {
+  padding: 0 1rem;
+  list-style: disc !important;
+}
+.ProseMirror ol {
+  padding: 0 2rem;
+  list-style: decimal !important;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  line-height: 1.1;
+}
+
+.ProseMirror code {
+  background-color: rgba(#616161, 0.1);
+  color: #616161;
+}
+
+.ProseMirror pre {
+  background: #0d0d0d;
+  color: #fff;
+  font-family: 'JetBrainsMono', monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+.ProseMirror code {
+  color: inherit;
+  padding: 0;
+  background: none;
+  font-size: 0.8rem;
+}
+
+.ProseMirror blockquote {
+  padding-left: 1rem;
+  border-left: 3px solid #999999;
+}
+
+.ProseMirror hr {
+  border: none;
+  border-top: 3px solid #999999;
+  margin: 2rem 0;
+}
+
+.heading3 {
+  font-size: 15px;
+}
+
+
+.button:disabled{
+  border-color: rgba(220, 20, 60, 0.473);
+  cursor: not-allowed;
+}
