@@ -7,7 +7,7 @@ import CardItem from "./CardItem";
 
 const Section = ({ list }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { cardList, setDragTask } = useCardStore();
+  const { cardList, setDragTask, dragTask } = useCardStore();
   const handleCloseModal = () => {
     setIsModalOpen(!isModalOpen);
   };
@@ -39,7 +39,10 @@ const Section = ({ list }) => {
           {cards.map((card) => (
             <div
               key={card._id}
-              className="bg-white my-2 rounded shadow w-full p-2 "
+              // className="bg-white my-2 rounded shadow w-full p-2 cursor-move "
+              className={`bg-white my-2 rounded shadow w-full p-2 cursor-move ${
+                dragTask === card._id ? "opacity-100" : "opacity-100"
+              }`}
               draggable
               onDragStart={() => {
                 setDragTask(card._id);

@@ -123,14 +123,14 @@ const SignInFrom = () => {
           >
             <FcGoogle size={30} /> Continue with Google
           </button>
-          <button
+          {/* <button
             onClick={() =>
               signIn("github", { callbackUrl: "http://localhost:3000" })
             }
             className=" flex flex-row items-center justify-around text-base font-semibold p-2 outline outline-1 outline-black rounded-lg bg-white text-black hover:bg-black hover:text-white duration-700 "
           >
             <FaGithub size={30} /> Continue with Github
-          </button>
+          </button> */}
         </div>
         <span className=" text-right ">
           Don&rsquo;t have an account?

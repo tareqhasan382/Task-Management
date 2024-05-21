@@ -12,7 +12,7 @@ import useBoardStore from "@/store/useBoardStore";
 const CreateBoard = ({ isOpen, onClose }) => {
     const {data:session} = useSession()
   
-    const { createBoard } = useBoardStore();
+    const { createBoard ,fetchBoards} = useBoardStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const schema = yup
@@ -38,6 +38,7 @@ const CreateBoard = ({ isOpen, onClose }) => {
         }
       setLoading(true);
      const result = await createBoard(boardData);
+     await fetchBoards()
       setLoading(false);
       toast.success("Board created successfully");
         onClose();

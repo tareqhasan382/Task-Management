@@ -29,7 +29,7 @@ const handleDrop= async({id,order})=>{
 moveTask(id, order);
 setDragTask(null);
 await updateCardList({ id: id, data: { order: order } })
-// await fetchCardList(boardId);
+
 
 }
   if (loading) {

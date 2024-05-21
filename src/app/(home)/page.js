@@ -1,7 +1,6 @@
-import Dashboard from "@/components/Dashboard";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
+
 import Head from "next/head";
 import Link from "next/link";
 import { getUsers } from "../../../lib/actions/actions";

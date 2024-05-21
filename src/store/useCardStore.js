@@ -55,7 +55,7 @@ const useCardStore = create(
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
-        //  await fetchCardList()
+
         if (!response.ok) {
           throw new Error("Failed to Updated Task Card");
         }
