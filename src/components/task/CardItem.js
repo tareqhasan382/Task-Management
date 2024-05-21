@@ -149,10 +149,7 @@ const CardItem = ({ item }) => {
         </div>
       </div>
       <p className="text-xs text-gray-500"> {formatDate(item.createdAt)}</p>
-      <div className=" flex flex-col ">
-        <small>{item._id}</small>
-        <small> Oder={item.order}</small>
-      </div>
+      <small>{item._id}</small>
       <UpdateCard isOpen={showModal} onClose={toggleModal} card="" />
     </div>
   );

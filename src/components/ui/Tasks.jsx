@@ -7,11 +7,11 @@ import LoaderModal from "../LoaderModal";
 import Section from "../task/Section";
 import CreateTaskList from "../task/CreateTaskList";
 import useCardStore from "@/store/useCardStore";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+
 const Tasks = ({ boardId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { taskList, loading, fetchTaskList } = useTaskListStore();
-  const { fetchCardList } = useCardStore();
+  const { fetchCardList,updateCardList, moveTask ,dragTask ,setDragTask} = useCardStore();
   
   useEffect(() => {
     fetchTaskList(boardId);
@@ -25,7 +25,13 @@ const Tasks = ({ boardId }) => {
   const handleCloseModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+const handleDrop= async({id,order})=>{
+moveTask(id, order);
+setDragTask(null);
+await updateCardList({ id: id, data: { order: order } })
+// await fetchCardList(boardId);
 
+}
   if (loading) {
     return <LoaderModal show={loading} />;
   }
@@ -45,10 +51,13 @@ const Tasks = ({ boardId }) => {
             
             <div  
             key={item._id}
-            draggable
-            ><DragDropContext  >
+            onDragOver={(e) => {
+              e.preventDefault();
+            }}
+            onDrop={(e)=>handleDrop({id:dragTask, order:item.order})}
+            >
               <Section list={item}  />
-              </DragDropContext>
+          
             </div>
             
           ))}
@@ -71,3 +80,13 @@ const Tasks = ({ boardId }) => {
 };
 
 export default Tasks;
+
+/*
+
+onDrop={(e) => {
+              updateCardList(dragTask, item.order);
+            //  moveTask(dragTask, item.order);
+              setDragTask(null);
+              
+            }}
+*/

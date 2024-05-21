@@ -26,12 +26,6 @@ const useTaskListStore = create(
       }
     },
     createTaskList: async (newTaskList) => {
-      // const previousTaskList = get().taskList;
-      // const optimisticTaskList = [...previousTaskList, newTaskList];
-
-      // // Optimistically update the task list
-      // set({ taskList: optimisticTaskList });
-
       try {
         const response = await fetch("/api/tasklist", {
           method: "POST",
@@ -42,24 +36,11 @@ const useTaskListStore = create(
         if (!response.ok) {
           throw new Error("Failed to create Task List");
         }
-
-        // Fetch the latest task list after successful creation
-        await get().fetchTaskList();
       } catch (error) {
         console.error("Error creating Task:", error);
-        // Revert to the previous task list if the request fails
-        // set({ taskList: previousTaskList });
       }
     },
     deleteBoard: async (boardId) => {
-      const previousTaskList = get().taskList;
-      const optimisticTaskList = previousTaskList.filter(
-        (task) => task._id !== boardId
-      );
-
-      // Optimistically update the task list
-      set({ taskList: optimisticTaskList });
-
       try {
         const response = await fetch(`/api/board/${boardId}`, {
           method: "DELETE",
@@ -69,23 +50,10 @@ const useTaskListStore = create(
         if (!response.ok) {
           throw new Error("Failed to delete TaskList");
         }
-
-        // Fetch the latest task list after successful deletion
-        await get().fetchTaskList();
       } catch (error) {
         console.error("Error deleting board:", error);
-        // Revert to the previous task list if the request fails
-        set({ taskList: previousTaskList });
       }
     },
-    addList: (list) =>
-      set(
-        (state) => ({ taskList: [list, ...state.taskList] }),
-        false,
-        "addList"
-      ),
-    setList: (taskList) =>
-      set({ taskList, areBoardsFetched: true }, false, "setList"),
   }))
 );
 

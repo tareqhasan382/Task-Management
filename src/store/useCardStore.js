@@ -7,7 +7,20 @@ const useCardStore = create(
     newOrder: 0,
     areFetched: false,
     loading: false,
-    cardBoardId: null,
+    dragTask: null,
+    setDragTask: (id) => {
+      console.log(`"setDragTask:"id ${id}`);
+      set({ dragTask: id });
+    },
+    moveTask: (id, status) => {
+      console.log(`"moveTask:"id ${id} status ${status}`);
+      set((state) => ({
+        cardList: state.cardList.map((task) =>
+          task._id === id ? { ...task, order: status } : task
+        ),
+      }));
+    },
+    //========================================================
     fetchCardList: async (id) => {
       try {
         const response = await fetch(`/api/taskcard/${id}`);
@@ -35,13 +48,14 @@ const useCardStore = create(
       }
     },
     updateCardList: async ({ id, data }) => {
+      console.log(`data ${data} id ${id}`);
       try {
         const response = await fetch(`/api/taskcard/${id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
-
+        //  await fetchCardList()
         if (!response.ok) {
           throw new Error("Failed to Updated Task Card");
         }
@@ -61,9 +75,6 @@ const useCardStore = create(
       } catch (error) {
         console.error("Error deleting card:", error);
       }
-    },
-    setBoardId: (id) => {
-      set({ cardBoardId: id });
     },
   }))
 );

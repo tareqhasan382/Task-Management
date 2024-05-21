@@ -7,14 +7,11 @@ import CardItem from "./CardItem";
 
 const Section = ({ list }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { cardList } = useCardStore();
+  const { cardList, setDragTask } = useCardStore();
   const handleCloseModal = () => {
     setIsModalOpen(!isModalOpen);
   };
   const cards = cardList.filter((card) => card.order === list.order);
-  // const filteredCards = cardList
-  //   .flatMap((cardsWrapper) => cardsWrapper.taskCards)
-  //   .filter((card) => card.order === list.order);
 
   return (
     <div className="w-full rounded lg:p-2 mb-6 relative">
@@ -44,6 +41,9 @@ const Section = ({ list }) => {
               key={card._id}
               className="bg-white my-2 rounded shadow w-full p-2 "
               draggable
+              onDragStart={() => {
+                setDragTask(card._id);
+              }}
             >
               <CardItem item={card} />
             </div>
@@ -55,14 +55,7 @@ const Section = ({ list }) => {
 };
 
 export default Section;
-{
-  /* <div className="w-full flex flex-row justify-between">
-                <span className="text-red-600 text-xs font-semibold uppercase mr-2">
-                  High Priority
-                </span>
-                <button className="text-gray-400">
-                  <Ellipsis size={20} />
-                </button>
-              </div>
-              <p>{card.title}</p> */
-}
+
+// const filteredCards = cardList
+//   .flatMap((cardsWrapper) => cardsWrapper.taskCards)
+//   .filter((card) => card.order === list.order);

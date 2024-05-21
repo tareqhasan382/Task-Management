@@ -19,9 +19,6 @@ const useBoardStore = create(
       }
     },
     createBoard: async (newBoard) => {
-      // set((state) => ({
-      //   boards: [newBoard, ...state.boards],
-      // }));
       try {
         const response = await fetch("/api/board", {
           method: "POST",
@@ -31,8 +28,6 @@ const useBoardStore = create(
         if (!response.ok) {
           throw new Error("Failed to create board");
         }
-        // Fetch the latest boards after successful creation
-        await get().fetchBoards();
       } catch (error) {
         console.error("Error creating board:", error);
       }
@@ -46,8 +41,6 @@ const useBoardStore = create(
         if (!response.ok) {
           throw new Error("Failed to delete board");
         }
-        // Fetch the latest boards after successful deletion
-        await get().fetchBoards();
       } catch (error) {
         console.error("Error deleting board:", error);
       }

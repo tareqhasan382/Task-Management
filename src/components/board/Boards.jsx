@@ -26,7 +26,7 @@ const Boards = () => {
   if (loading) {
     return <LoaderModal show={loading} />;
   }
- 
+  console.log("Boards")
   return (
     <div className=" p-6 bg-slate-100 w-full min-h-screen ">
       <h1 className="text-2xl font-bold mb-4 text-left  ">My Board</h1>
