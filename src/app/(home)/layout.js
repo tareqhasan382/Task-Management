@@ -1,8 +1,7 @@
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { AuthProvider } from "@/Providers";
-// import { getServerSession } from "next-auth";
-// import { authOptions } from "./api/auth/[...nextauth]/route";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "@/components/ui/Header";
@@ -14,8 +13,6 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  // const session = await getServerSession(authOptions);
-  // console.log("RootLayout session:", session?.user);
   return (
     <html lang="en">
       <body className={inter.className}>

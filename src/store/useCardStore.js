@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-
 const useCardStore = create(
   devtools((set, get) => ({
     cardList: [],
@@ -12,11 +11,11 @@ const useCardStore = create(
       console.log(`"setDragTask:"id ${id}`);
       set({ dragTask: id });
     },
-    moveTask: (id, status) => {
-      console.log(`"moveTask:"id ${id} status ${status}`);
+    moveTask: (id, newOrder) => {
+      console.log(`"moveTask:"id ${id} newOrder ${newOrder}`);
       set((state) => ({
         cardList: state.cardList.map((task) =>
-          task._id === id ? { ...task, order: status } : task
+          task._id === id ? { ...task, order: newOrder } : task
         ),
       }));
     },
@@ -57,7 +56,7 @@ const useCardStore = create(
         });
 
         if (!response.ok) {
-          throw new Error("Failed to Updated Task Card");
+          throw new Error("Failed to Update Task Card");
         }
       } catch (error) {
         console.error("Error Updating Task:", error);

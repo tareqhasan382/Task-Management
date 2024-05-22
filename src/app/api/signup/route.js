@@ -14,7 +14,7 @@ export async function POST(req, res) {
         { status: 409 }
       );
     }
-    console.log("user data:", { name, email, password });
+    // console.log("user data:", { name, email, password });
     await UserModel.create({ name, email, password });
     return NextResponse.json(
       { message: "User created successfully.", success: "true" },

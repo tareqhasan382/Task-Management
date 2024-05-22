@@ -61,6 +61,7 @@ await updateCardList({ id: id, data: { order: order } })
             </div>
             
           ))}
+          <div className=" w-full ">
           <button
             onClick={() => setIsModalOpen(true)}
             className="bg-white hover:bg-slate-50 p-2 shadow-lg rounded text-black flex items-center"
@@ -68,6 +69,7 @@ await updateCardList({ id: id, data: { order: order } })
             <Plus />
             <span className="font-semibold">Add a list</span>
           </button>
+          </div>
         </div>
         <CreateTaskList
           boardId={boardId}

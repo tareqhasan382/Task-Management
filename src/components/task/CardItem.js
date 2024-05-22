@@ -6,19 +6,19 @@ import UpdateCard from "./UpdateCard";
 import useTaskListStore from "@/store/useTaskListStore";
 import LoaderModal from "../LoaderModal";
 import useCardStore from "@/store/useCardStore";
+import useUserStore from "@/store/useUserStore";
+import Image from "next/image";
 
 const CardItem = ({ item }) => {
   const { taskList } = useTaskListStore();
   const { updateCardList, loading, fetchCardList, deleteCard } = useCardStore();
+  const { users } = useUserStore();
   const [showModal, setShowModal] = useState(false);
   const [showUser, setShowUser] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isMove, setIsMove] = useState(false);
-  const userInfo = {
-    name: "Jane Smith",
-    role: "Product Manager",
-    email: "jane.smith@example.com",
-  };
+  const [userInfo, setUserInfo] = useState();
+
   const toggleModal = () => {
     setShowModal(!showModal);
     setIsHovered(!isHovered);
@@ -119,18 +119,31 @@ const CardItem = ({ item }) => {
           assignee
         </span>
         <div className="  right-0  ">
-          <button
-            onClick={() => setShowUser(!showUser)}
-            className="inline-block size-8 text-center items-center bg-slate-200 rounded-full cursor-pointer "
-          >
-            {/* <User className=" w-full h-full p-1 " /> */}
-          </button>
+          {item?.teamMembers &&
+            item.teamMembers.map((member, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setShowUser(!showUser),
+                    setUserInfo(users.find((user) => user._id === member));
+                }}
+                className="inline-block size-8 text-center items-center bg-slate-400 hover:bg-blue-400 rounded-full cursor-pointer "
+              >
+                <Image
+                  className=" object-cover size-8 "
+                  src="https://i.ibb.co/GQhYg9f/user-profile-icon.png"
+                  height={20}
+                  width={20}
+                  alt="profile-image"
+                />
+              </button>
+            ))}
           <div
             onClick={() => setShowUser(true)}
             className={`absolute top-6 right-0 flex items-center  `}
           >
             {showUser && (
-              <div className=" w-full rounded shadow-lg text-black flex flex-col ">
+              <div className=" z-50 w-full rounded shadow-lg text-black flex flex-col ">
                 <div className="bg-white w-full rounded-lg shadow-lg p-2 inline-block ">
                   <div className="flex justify-between items-center border-b border-blue-500 ">
                     <h2 className="text-lg font-semibold">User Info</h2>
@@ -148,9 +161,11 @@ const CardItem = ({ item }) => {
           </div>
         </div>
       </div>
-      <p className="text-xs text-gray-500"> {formatDate(item.createdAt)}</p>
-      <small>{item._id}</small>
-      <UpdateCard isOpen={showModal} onClose={toggleModal} card="" />
+      <p className="text-xs text-gray-500 flex gap-1 ">
+        <strong>Last Date</strong>
+        {new Date(item.subtaskDate).toISOString().split("T")[0]}{" "}
+      </p>
+      <UpdateCard isOpen={showModal} onClose={toggleModal} item={item} />
     </div>
   );
 };

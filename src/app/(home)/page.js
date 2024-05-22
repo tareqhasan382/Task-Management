@@ -1,15 +1,8 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
-
 import Head from "next/head";
 import Link from "next/link";
-import { getUsers } from "../../../lib/actions/actions";
+
 export const BASEURL = "http://localhost:3000";
 export default async function Home() {
-  const session = await getServerSession(authOptions);
-  // console.log("session:", session?.user);
-  const users = await getUsers();
-  console.log("users:", users);
   // if (!session?.user) redirect("/sign-in");
   return (
     <main className=" w-full h-auto mx-auto overflow-hidden ">

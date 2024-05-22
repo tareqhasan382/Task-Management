@@ -1,8 +1,12 @@
-import Head from 'next/head'
+"use client"
+import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import React from 'react'
+import Head from 'next/head'
+
 
 const Header = () => {
+  const {data} = useSession()
   return (
     <div>
          <Head>
@@ -20,9 +24,11 @@ const Header = () => {
             <span className="text-2xl font-bold">TaskFlow</span>
           </div>
           <div className=" flex items-start ">
-          <Link href="/sign-in">  <button className="bg-black py-2 px-4 text-white rounded hover:bg-gray-800 transition duration-300 ">
-              Login
-            </button></Link>
+          {data?.user ? <button onClick={()=>signOut()} className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition duration-300">
+          Sign Out
+        </button>:<Link href="/sign-in"><button  className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition duration-300">
+          Sign In
+        </button></Link> }
             <Link href="/board">
               <button className="bg-black hidden sm:block text-white py-2 px-4 ml-2 rounded hover:bg-gray-800 transition duration-300 ">
                 Get TaskFlow for free

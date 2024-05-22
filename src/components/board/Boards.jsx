@@ -17,7 +17,7 @@ const Boards = () => {
   const handleDelete = async (boardId) => {
     try {
       await deleteBoard(boardId);
-     
+      fetchBoards()
       toast.success("Board deleted successfully");
     } catch (error) {
       toast.error("Failed to delete board");

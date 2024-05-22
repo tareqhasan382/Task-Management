@@ -1,6 +1,6 @@
 "use client";
 import { X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,26 +10,20 @@ import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import useCardStore from "@/store/useCardStore";
 import Select from "react-select";
-import { format, parseISO, isValid } from "date-fns";
-const options = [
-  { value: "1", label: "Chocolate" },
-  { value: "2", label: "Strawberry" },
-  { value: "3", label: "Vanilla" },
-];
+import useUserStore from "@/store/useUserStore";
 
-const UpdateCard = ({ isOpen, onClose, list }) => {
+const UpdateCard = ({ isOpen, onClose, item }) => {
   const { data: session } = useSession();
-  const { createCardList, fetchCardList } = useCardStore();
+  const { updateCardList, fetchCardList } = useCardStore();
+  const { users, fetchUsers } = useUserStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [selectDate, setSelectDate] = useState("");
-  const [selectTime, setSelectTime] = useState("");
+  const [allUser, setAllUser] = useState([]);
 
   const schema = yup.object().shape({
     title: yup.string().required("Title is required"),
     description: yup.string().required("Description is required"),
-    listId: yup.string().required(),
-    order: yup.number().required(),
+    date: yup.date().required("Date is required"),
     teamMembers: yup
       .array()
       .of(
@@ -48,38 +42,75 @@ const UpdateCard = ({ isOpen, onClose, list }) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      title: item.title,
+      description: item.description,
+      date: item.subtaskDate
+        ? new Date(item.subtaskDate).toISOString().split("T")[0]
+        : "",
+      teamMembers: [],
+    },
+  });
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  useEffect(() => {
+    setAllUser(users.map((user) => ({ value: user._id, label: user.name })));
+  }, [users]);
+
+  useEffect(() => {
+    const defaultTeamMembers = item.teamMembers
+      .map((memberId) => {
+        const user = users.find((user) => user._id === memberId);
+        return user ? { value: user._id, label: user.name } : null;
+      })
+      .filter(Boolean);
+
+    reset({
+      title: item.title,
+      description: item.description,
+      date: item.subtaskDate
+        ? new Date(item.subtaskDate).toISOString().split("T")[0]
+        : "",
+      teamMembers: defaultTeamMembers,
+    });
+  }, [users, item, reset]);
 
   const onSubmit = async (data) => {
     const teamMembers = data.teamMembers.map((tag) => tag.value);
-
     const formData = {
       title: data.title,
       description: data.description,
-      subtaskDate: selectDate,
-      time: selectTime,
-      listId: data.listId,
+      subtaskDate: data.date,
+      order: item.order,
       teamMembers: teamMembers,
     };
 
     try {
       setLoading(true);
-      console.log("data:", formData);
-      await createCardList(formData);
+      // console.log("data:", formData);
+      await updateCardList({ id: item._id, data: formData });
+      await fetchCardList(item.bordId);
       setLoading(false);
-      toast.success("TaskList created successfully");
+      toast.success("TaskList updated successfully");
       onClose();
       reset();
     } catch (error) {
       setLoading(false);
-      toast.error("Error Task list creation failed");
+      toast.error("Error Task list update failed");
     }
   };
 
   if (loading) {
     return <LoaderModal show={loading} />;
   }
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
   return (
     <>
       {isOpen && (
@@ -95,20 +126,6 @@ const UpdateCard = ({ isOpen, onClose, list }) => {
             <h2 className="text-lg font-semibold mb-4">Update Task Card</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="">
               <div className="w-full flex flex-col mb-4">
-                <input
-                  hidden
-                  type="text"
-                  id="listId"
-                  {...register("listId")}
-                  defaultValue={list?._id}
-                />
-                <input
-                  hidden
-                  type="order"
-                  id="order"
-                  {...register("order")}
-                  defaultValue={list?.order}
-                />
                 <label>Card Title</label>
                 <input
                   className="mb-2 p-2 border-gray-300 border-[1px] rounded-lg outline-none focus:border-gray-600 text-black"
@@ -140,43 +157,14 @@ const UpdateCard = ({ isOpen, onClose, list }) => {
                 <input
                   type="date"
                   name="date"
-                  value={selectDate}
-                  onChange={(e) =>
-                    setSelectDate(
-                      format(parseISO(e.target.value), "yyyy-MM-dd")
-                    )
-                  }
+                  {...register("date")}
                   className="mb-2 p-2 border-gray-300 border-[1px] rounded-lg outline-none focus:border-gray-600 text-black"
                 />
-                <label>Due Time</label>
-                <input
-                  type="time"
-                  name="time"
-                  value={selectTime}
-                  onChange={(e) => {
-                    const inputValue = e.target.value;
-                    if (inputValue) {
-                      const parsedTime = parseISO(`1970-01-01T${inputValue}`);
-                      if (isValid(parsedTime)) {
-                        setSelectTime(format(parsedTime, "HH:mm"));
-                      } else {
-                        setSelectTime("");
-                      }
-                    } else {
-                      setSelectTime("");
-                    }
-                  }}
-                  className="mb-2 p-2 border-gray-300 border-[1px] rounded-lg outline-none focus:border-gray-600 text-black"
-                />
-                {/* <input
-                  type="time"
-                  name="time"
-                  value={selectTime}
-                  onChange={(e) =>
-                    setSelectTime(format(parseISO(e.target.value), "HH:mm"))
-                  }
-                  className="mb-2 p-2 border-gray-300 border-[1px] rounded-lg outline-none focus:border-gray-600 text-black"
-                /> */}
+                {errors.date && (
+                  <span className="text-sm text-red-500">
+                    {errors.date.message}
+                  </span>
+                )}
                 <label>Select Team Members</label>
                 <Controller
                   name="teamMembers"
@@ -184,7 +172,7 @@ const UpdateCard = ({ isOpen, onClose, list }) => {
                   render={({ field }) => (
                     <Select
                       {...field}
-                      options={options}
+                      options={allUser}
                       isMulti
                       className="mb-2"
                       placeholder="Select team members"

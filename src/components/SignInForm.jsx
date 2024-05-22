@@ -47,7 +47,7 @@ const SignInFrom = () => {
       if (result.ok) {
         toast.success("User loggedIn successfully");
         setLoading(false);
-        router.replace("/");
+        router.replace("/board");
       }
     } catch (error) {
       setLoading(false);

@@ -1,6 +1,6 @@
 "use client";
 import { X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,28 +10,29 @@ import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import useCardStore from "@/store/useCardStore";
 import Select from "react-select";
-import { format, parseISO, isValid } from "date-fns";
-const options = [
-  { value: "1", label: "Chocolate" },
-  { value: "2", label: "Strawberry" },
-  { value: "3", label: "Vanilla" },
-];
+import useUserStore from "@/store/useUserStore";
 
 const CreateCard = ({ isOpen, onClose, list }) => {
   const { data: session } = useSession();
   const { createCardList, fetchCardList } = useCardStore();
+  const { users, fetchUsers } = useUserStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [allUser, setAllUser] = useState([]);
 
-  const [selectDate, setSelectDate] = useState("");
-  const [selectTime, setSelectTime] = useState("");
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+  useEffect(() => {
+    setAllUser(users.map((user) => ({ value: user._id, label: user.name })));
+  }, [users]);
 
   const schema = yup.object().shape({
     title: yup.string().required("Title is required"),
     description: yup.string().required("Description is required"),
+    date: yup.date().required(),
     listId: yup.string().required(),
     order: yup.number().required(),
-    // board: yup.string().required(),
     teamMembers: yup
       .array()
       .of(
@@ -54,21 +55,20 @@ const CreateCard = ({ isOpen, onClose, list }) => {
 
   const onSubmit = async (data) => {
     const teamMembers = data.teamMembers.map((tag) => tag.value);
-
+    //title , description , subtaskDate , listId , teamMembers
     const formData = {
       title: data.title,
       description: data.description,
-      // subtaskDate: selectDate,
-      // time: selectTime,
+      subtaskDate: data.date,
       order: list.order,
       listId: data.listId,
-      // teamMembers: teamMembers,
+      teamMembers: teamMembers,
       bordId: list?.bordId,
     };
 
     try {
       setLoading(true);
-      console.log("data:", formData);
+      //   console.log("data:", formData);
       await createCardList(formData);
       await fetchCardList(list.bordId);
       setLoading(false);
@@ -84,7 +84,9 @@ const CreateCard = ({ isOpen, onClose, list }) => {
   if (loading) {
     return <LoaderModal show={loading} />;
   }
-
+  if (!isOpen) {
+    return null;
+  }
   return (
     <>
       {isOpen && (
@@ -114,13 +116,7 @@ const CreateCard = ({ isOpen, onClose, list }) => {
                   {...register("order")}
                   defaultValue={list?.order}
                 />
-                {/* <input
-                  hidden
-                  type="board"
-                  id="board"
-                  {...register("board")}
-                  defaultValue={list.boardId}
-                /> */}
+
                 <label>Card Title</label>
                 <input
                   className="mb-2 p-2 border-gray-300 border-[1px] rounded-lg outline-none focus:border-gray-600 text-black"
@@ -152,43 +148,15 @@ const CreateCard = ({ isOpen, onClose, list }) => {
                 <input
                   type="date"
                   name="date"
-                  value={selectDate}
-                  onChange={(e) =>
-                    setSelectDate(
-                      format(parseISO(e.target.value), "yyyy-MM-dd")
-                    )
-                  }
+                  {...register("date")}
+                  // value={selectDate}
+                  // onChange={(e) =>
+                  //   setSelectDate(
+                  //     format(parseISO(e.target.value), "yyyy-MM-dd")
+                  //   )
+                  // }
                   className="mb-2 p-2 border-gray-300 border-[1px] rounded-lg outline-none focus:border-gray-600 text-black"
                 />
-                <label>Due Time</label>
-                <input
-                  type="time"
-                  name="time"
-                  value={selectTime}
-                  onChange={(e) => {
-                    const inputValue = e.target.value;
-                    if (inputValue) {
-                      const parsedTime = parseISO(`1970-01-01T${inputValue}`);
-                      if (isValid(parsedTime)) {
-                        setSelectTime(format(parsedTime, "HH:mm"));
-                      } else {
-                        setSelectTime("");
-                      }
-                    } else {
-                      setSelectTime("");
-                    }
-                  }}
-                  className="mb-2 p-2 border-gray-300 border-[1px] rounded-lg outline-none focus:border-gray-600 text-black"
-                />
-                {/* <input
-                  type="time"
-                  name="time"
-                  value={selectTime}
-                  onChange={(e) =>
-                    setSelectTime(format(parseISO(e.target.value), "HH:mm"))
-                  }
-                  className="mb-2 p-2 border-gray-300 border-[1px] rounded-lg outline-none focus:border-gray-600 text-black"
-                /> */}
                 <label>Select Team Members</label>
                 <Controller
                   name="teamMembers"
@@ -196,7 +164,7 @@ const CreateCard = ({ isOpen, onClose, list }) => {
                   render={({ field }) => (
                     <Select
                       {...field}
-                      options={options}
+                      options={allUser}
                       isMulti
                       className="mb-2"
                       placeholder="Select team members"
