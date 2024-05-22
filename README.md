@@ -1,49 +1,24 @@
-# Project Management Dashboard
+# Task Management Project
 
-![Dashboard Preview](https://i.ibb.co/kSXqqZL/Screenshot-3232.png)
+A powerful and intuitive full-stack task management system built using Next.js, Tailwind CSS, Zustand for state management, Mongoose for database interactions, and NextAuth for authentication.
 
-## Project Overview
+![Dashboard Preview](https://i.ibb.co/rFRPpPf/Screenshot-3916.png)
+![Dashboard Preview](https://i.ibb.co/rwhwMWW/Screenshot-3917.png)
+![Dashboard Preview](https://i.ibb.co/Jpj1dKK/Screenshot-3918.png)
 
-This repository contains a project management dashboard developed using Next.js, Zustand for state management, and Tailwind CSS for styling. The dashboard provides features for authentication, project management, task management, and task filtering/search functionality.
+## Features
 
-### Features
+- **Create Board**: Easily create new boards to organize your tasks.
+- **Board Related Tasks**: Add and manage tasks within each board.
+- **Task Related Details**: Assign Task Related details related to each task.
+- **Drag and Drop**: Seamlessly drag and drop assign tasks between Culomns.
+- **User Authentication**: Secure user authentication using NextAuth.
+- **Persistent Storage**: Save and retrieve data using MongoDB and Mongoose.
 
-1. **Authentication Page:**
+## Technologies Used
 
-   - Users can log in with validation for form elements and validation feedback.
-   - Backend authentication and authorization are implemented, with mock responses for successful and unsuccessful logins.
-
-2. **Projects Overview Page:**
-
-   - Displays a list of projects with options to view, edit, or delete.
-
-3. **Project Details Page:**
-
-   - After selecting a project, detailed information including tasks and recent activities is shown.
-   - Functionality to CURD Operation in project .
-
-4. **Task Management:**
-
-   - Tasks can be added, edited, or marked as completed.
-   - Each task has a detailed view with descriptions, deadlines, and assigned members.
-   - Implements a drag-and-drop feature to change the status of tasks (e.g., To Do, In Progress, Done) using Zustand for state management.
-
-5. **Task Filters and Search Functionality:**
-
-   - Users can filter tasks by status, due date, or assignee.
-   - Provides a search bar to find tasks quickly.
-
-6. **Interactive Dashboard:**
-   - Uses dropdowns and tooltips to enhance interactivity.
-   - All components are responsive with Tailwind CSS for a seamless user experience.
-
-### Technical Details
-
-- **Framework:** Next.js for routing and server-side rendering.
-- **State Management:** Zustand for managing the global state.
-- **Editor:** ReactTipTap for rich text editing.
-- **Styling:** Implements Tailwind CSS for responsive design and custom styling needs.
-
-### Delivery
-
-The project is submitted through a GitHub repository. The README provides setup instructions and a brief overview of the architecture.
+- [Next.js](https://nextjs.org/): A React framework for server-rendered applications.
+- [Tailwind CSS](https://tailwindcss.com/): A utility-first CSS framework for rapid UI development.
+- [Zustand](https://zustand.surge.sh/): A small, fast, and scalable bearbones state-management solution using simplified flux principles.
+- [Mongoose](https://mongoosejs.com/): Elegant MongoDB object modeling for Node.js.
+- [NextAuth](https://next-auth.js.org/): Authentication for Next.js.
